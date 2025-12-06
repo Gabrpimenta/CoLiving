@@ -1,0 +1,26 @@
+overwrite: true
+schema:
+  - https://slconxrxinaijyzlxgrm.supabase.co/graphql/v1:
+      headers:
+        apiKey: sb_publishable_fihjzTEpujCcr8qwZD_mVw_18pgCyK-
+documents: 'src/graphql/**/*.graphql'
+generates:
+  src/generated/graphql.ts:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-react-apollo'
+    config:
+      withHooks: true
+      withComponent: false
+      withHOC: false
+      skipTypename: false
+      enumsAsTypes: true
+      scalars:
+        UUID: string
+        Date: string
+        Datetime: string
+        Time: string
+        Cursor: string
+      dedupeFragments: true
+
