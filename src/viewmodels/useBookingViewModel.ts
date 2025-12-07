@@ -1,18 +1,26 @@
 import { useState, useCallback } from 'react';
-import {
-  useGetMyBookingsQuery,
-  useCreateBookingMutation,
-  useUpdateBookingMutation,
-  useCancelBookingMutation,
-  useCheckInBookingMutation,
+import { useQuery, useMutation } from '@apollo/client/react';
+import type {
+  GetMyBookingsQuery,
+  CreateBookingMutation,
+  UpdateBookingMutation,
+  CancelBookingMutation,
+  CheckInBookingMutation,
   BookingsInsertInput,
   BookingsUpdateInput,
 } from '@/generated/graphql';
 import { supabase } from '@/config/supabase';
+import {
+  GET_MY_BOOKINGS,
+  CREATE_BOOKING,
+  UPDATE_BOOKING,
+  CANCEL_BOOKING,
+  CHECK_IN_BOOKING,
+} from '@/constants';
 
 /**
  * ViewModel for Booking Management
- * 
+ *
  * Manages booking creation, updates, cancellation, and check-in
  */
 export function useBookingViewModel() {
@@ -32,30 +40,25 @@ export function useBookingViewModel() {
     data: bookingsData,
     loading: loadingBookings,
     refetch: refetchBookings,
-  } = useGetMyBookingsQuery({
+  } = useQuery<GetMyBookingsQuery>(GET_MY_BOOKINGS, {
     variables: { userId: userId || '', first: 20 },
     skip: !userId,
   });
 
   const [createBookingMutation, { loading: creating }] =
-    useCreateBookingMutation();
+    useMutation<CreateBookingMutation>(CREATE_BOOKING);
   const [updateBookingMutation, { loading: updating }] =
-    useUpdateBookingMutation();
+    useMutation<UpdateBookingMutation>(UPDATE_BOOKING);
   const [cancelBookingMutation, { loading: cancelling }] =
-    useCancelBookingMutation();
+    useMutation<CancelBookingMutation>(CANCEL_BOOKING);
   const [checkInMutation, { loading: checkingIn }] =
-    useCheckInBookingMutation();
+    useMutation<CheckInBookingMutation>(CHECK_IN_BOOKING);
 
   const bookings =
     bookingsData?.bookingsCollection?.edges?.map((edge) => edge?.node).filter(Boolean) ?? [];
 
   const createBooking = useCallback(
-    async (
-      spaceId: string,
-      startTime: string,
-      endTime: string,
-      notes?: string
-    ) => {
+    async (spaceId: string, startTime: string, endTime: string, notes?: string) => {
       const user = await getCurrentUser();
       if (!user) throw new Error('Not authenticated');
 
@@ -131,4 +134,3 @@ export function useBookingViewModel() {
     getCurrentUser,
   };
 }
-

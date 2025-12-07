@@ -1,5 +1,7 @@
 import { useState, useCallback } from 'react';
-import { useGetSpacesQuery } from '@/generated/graphql';
+import { useQuery } from '@apollo/client/react';
+import type { GetSpacesQuery } from '@/generated/graphql';
+import { GET_SPACES } from '@/constants';
 
 /**
  * ViewModel for Space List Screen
@@ -9,7 +11,7 @@ import { useGetSpacesQuery } from '@/generated/graphql';
 export function useSpaceListViewModel() {
   const [refreshing, setRefreshing] = useState(false);
 
-  const { data, loading, error, fetchMore, refetch } = useGetSpacesQuery({
+  const { data, loading, error, fetchMore, refetch } = useQuery<GetSpacesQuery>(GET_SPACES, {
     variables: { first: 20 },
     notifyOnNetworkStatusChange: true,
   });
@@ -17,7 +19,7 @@ export function useSpaceListViewModel() {
   const spaces = (() => {
     const edges = data?.spacesCollection?.edges;
     if (!edges) return [];
-    return edges.map((edge: { node: unknown }) => edge.node);
+    return edges.map((edge) => edge.node);
   })();
   const hasMore = data?.spacesCollection?.pageInfo?.hasNextPage ?? false;
   const endCursor = data?.spacesCollection?.pageInfo?.endCursor ?? null;
