@@ -1,6 +1,17 @@
 <resources>
-  <color name="splashscreen_background">#ffffff</color>
-  <color name="iconBackground">#ffffff</color>
-  <color name="colorPrimary">#023c69</color>
-  <color name="colorPrimaryDark">#ffffff</color>
+  <!-- CoLiving Brand Colors -->
+  <color name="splashscreen_background">#0066CC</color>
+  <color name="iconBackground">#0066CC</color>
+  <color name="colorPrimary">#0066CC</color>
+  <color name="colorPrimaryDark">#004499</color>
+  
+  <!-- Brand Secondary Colors -->
+  <color name="brandSecondary">#00A86B</color>
+  <color name="brandAccent">#FF6B35</color>
+  
+  <!-- Semantic Colors -->
+  <color name="semanticSuccess">#10B981</color>
+  <color name="semanticWarning">#F59E0B</color>
+  <color name="semanticError">#EF4444</color>
+  <color name="semanticInfo">#3B82F6</color>
 </resources>
