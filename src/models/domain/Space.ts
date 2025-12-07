@@ -43,7 +43,7 @@ export class SpaceModel {
     }
   }
 
-  isAvailable(startTime: Date, endTime: Date): boolean {
+  isAvailable(_startTime: Date, _endTime: Date): boolean {
     return true;
   }
 
