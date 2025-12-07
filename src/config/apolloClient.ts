@@ -1,11 +1,11 @@
-import { ApolloClient, InMemoryCache, HttpLink, ApolloLink } from '@apollo/client';
+import { ApolloClient, InMemoryCache, HttpLink, ApolloLink, Observable } from '@apollo/client';
 import { relayStylePagination } from '@apollo/client/utilities';
 import 'react-native-url-polyfill/auto';
 import { supabase } from './supabase';
 
 const getEnvVar = (key: string, defaultValue: string): string => {
   if (typeof process !== 'undefined' && process.env && process.env[key]) {
-    return process.env[key];
+    return process.env[key] ?? defaultValue;
   }
   return defaultValue;
 };
@@ -20,42 +20,36 @@ const SUPABASE_ANON_KEY = getEnvVar(
 );
 
 const authLink = new ApolloLink((operation, forward) => {
-  return new Promise((resolve) => {
+  return new Observable((observer) => {
     supabase.auth
       .getSession()
       .then(({ data: { session } }) => {
         const token = session?.access_token;
-        const existingHeaders = (operation.getContext().headers || {}) as Record<string, string>;
 
-        const headers: Record<string, string> = {
-          ...existingHeaders,
-          apiKey: SUPABASE_ANON_KEY,
-        };
-
-        if (token) {
-          headers.Authorization = `Bearer ${token}`;
-        }
-
-        operation.setContext((prevContext: Record<string, unknown>) => ({
-          ...prevContext,
-          headers,
+        operation.setContext(({ headers = {} }) => ({
+          headers: {
+            ...headers,
+            apiKey: SUPABASE_ANON_KEY,
+            ...(token && { Authorization: `Bearer ${token}` }),
+          },
         }));
-
-        resolve(forward(operation));
       })
       .catch(() => {
-        const existingHeaders = (operation.getContext().headers || {}) as Record<string, string>;
-        const headers: Record<string, string> = {
-          ...existingHeaders,
-          apiKey: SUPABASE_ANON_KEY,
-        };
-
-        operation.setContext((prevContext: Record<string, unknown>) => ({
-          ...prevContext,
-          headers,
+        operation.setContext(({ headers = {} }) => ({
+          headers: {
+            ...headers,
+            apiKey: SUPABASE_ANON_KEY,
+          },
         }));
+      })
+      .finally(() => {
+        const subscription = forward(operation).subscribe({
+          next: observer.next.bind(observer),
+          error: observer.error.bind(observer),
+          complete: observer.complete.bind(observer),
+        });
 
-        resolve(forward(operation));
+        return () => subscription.unsubscribe();
       });
   });
 });

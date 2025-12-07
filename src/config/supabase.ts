@@ -1,10 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import 'react-native-url-polyfill/auto';
+import { mmkvStorage } from '@/utils/storage';
 
 const getEnvVar = (key: string, defaultValue: string): string => {
   if (typeof process !== 'undefined' && process.env && process.env[key]) {
-    return process.env[key];
+    return process.env[key] ?? defaultValue;
   }
   return defaultValue;
 };
@@ -20,7 +20,7 @@ const supabaseAnonKey = getEnvVar(
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
-    storage: AsyncStorage,
+    storage: mmkvStorage,
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: false,
