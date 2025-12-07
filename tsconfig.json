@@ -1,34 +1,56 @@
 {
-  "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true,
+    "target": "esnext",
+    "lib": [
+      "esnext"
+    ],
     "jsx": "react-native",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@models/*": ["./src/models/*"],
-      "@viewmodels/*": ["./src/viewmodels/*"],
-      "@views/*": ["./src/views/*"],
-      "@services/*": ["./src/services/*"],
-      "@utils/*": ["./src/utils/*"],
-      "@types/*": ["./src/types/*"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@models/*": [
+        "./src/models/*"
+      ],
+      "@viewmodels/*": [
+        "./src/viewmodels/*"
+      ],
+      "@views/*": [
+        "./src/views/*"
+      ],
+      "@services/*": [
+        "./src/services/*"
+      ],
+      "@utils/*": [
+        "./src/utils/*"
+      ],
+      "@types/*": [
+        "./src/types/*"
+      ]
     }
   },
   "include": [
     "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "**/*.tsx"
   ],
   "exclude": [
     "node_modules",
     "src/generated/**/*"
-  ]
+  ],
+  "extends": "expo/tsconfig.base"
 }
