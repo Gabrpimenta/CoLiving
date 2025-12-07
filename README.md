@@ -74,16 +74,18 @@ src/
 # Install dependencies
 yarn install
 
-# Start development server
-yarn start
 
-# Run on iOS
+# For iOS (requires Mac)
+cd ios && pod install && cd ..
 yarn ios
 
-# Run on Android
+# For Android
 yarn android
 
-# Run on Web
+# Start development server (after native build)
+yarn start
+
+# Run on Web (limited MMKV support)
 yarn web
 ```
 
@@ -101,8 +103,6 @@ yarn remove <package-name>
 ```
 
 ### Package Management
-
-This project uses **Yarn** as the package manager. All commands should use `yarn` instead of `npm`:
 
 ```bash
 # Install dependencies
@@ -149,13 +149,14 @@ See detailed documentation:
 
 ## Technology Stack
 
-- **Framework**: React Native (Expo SDK 54)
+- **Framework**: React Native (Expo SDK 51)
 - **Language**: TypeScript (strict mode)
 - **Package Manager**: Yarn
 - **GraphQL**: Apollo Client + Supabase GraphQL
 - **Database**: WatermelonDB (offline-first)
 - **Navigation**: React Navigation
-- **State Management**: React Hooks (MVVM pattern) + Redux Toolkit
+- **State Management**: React Hooks (MVVM pattern) + Zustand
+- **Storage**: MMKV v2 (high-performance local storage)
 - **Testing**: Jest + React Native Testing Library
 - **Linting**: ESLint + Prettier
 
