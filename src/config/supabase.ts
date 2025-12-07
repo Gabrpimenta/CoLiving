@@ -2,11 +2,6 @@ import { createClient } from '@supabase/supabase-js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import 'react-native-url-polyfill/auto';
 
-/**
- * Supabase Client Configuration
- *
- */
-
 const getEnvVar = (key: string, defaultValue: string): string => {
   if (typeof process !== 'undefined' && process.env && process.env[key]) {
     return process.env[key];

@@ -3,10 +3,6 @@ import { relayStylePagination } from '@apollo/client/utilities';
 import 'react-native-url-polyfill/auto';
 import { supabase } from './supabase';
 
-/**
- * Apollo Client Configuration
- */
-
 const getEnvVar = (key: string, defaultValue: string): string => {
   if (typeof process !== 'undefined' && process.env && process.env[key]) {
     return process.env[key];
