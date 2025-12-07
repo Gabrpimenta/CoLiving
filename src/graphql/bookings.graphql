@@ -1,0 +1,239 @@
+# Bookings Queries and Mutations
+# Using Supabase GraphQL Collection pattern
+
+# Query: Buscar reservas do usuário
+query GetMyBookings($userId: UUID!, $first: Int!, $after: Cursor) {
+  bookingsCollection(
+    first: $first
+    after: $after
+    filter: { userId: { eq: $userId } }
+    orderBy: { startTime: DescNullsLast }
+  ) {
+    edges {
+      node {
+        id
+        nodeId
+        startTime
+        endTime
+        status
+        notes
+        checkedIn
+        checkedInAt
+        qrCode
+        createdAt
+        updatedAt
+        space {
+          id
+          name
+          type
+          capacity
+          imageUrl
+          floor
+        }
+      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      endCursor
+      startCursor
+    }
+  }
+}
+
+# Query: Buscar próximas reservas (futuras)
+query GetUpcomingBookings($userId: UUID!, $currentTime: Datetime!) {
+  bookingsCollection(
+    first: 20
+    filter: {
+      userId: { eq: $userId }
+      startTime: { gte: $currentTime }
+      status: { in: ["confirmed", "pending"] }
+    }
+    orderBy: { startTime: AscNullsLast }
+  ) {
+    edges {
+      node {
+        id
+        startTime
+        endTime
+        status
+        notes
+        checkedIn
+        space {
+          id
+          name
+          type
+          imageUrl
+          floor
+        }
+      }
+    }
+  }
+}
+
+# Query: Buscar histórico de reservas (passadas)
+query GetPastBookings($userId: UUID!, $currentTime: Datetime!, $first: Int!) {
+  bookingsCollection(
+    first: $first
+    filter: {
+      userId: { eq: $userId }
+      endTime: { lt: $currentTime }
+    }
+    orderBy: { endTime: DescNullsLast }
+  ) {
+    edges {
+      node {
+        id
+        startTime
+        endTime
+        status
+        checkedIn
+        space {
+          name
+          type
+          imageUrl
+        }
+      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+
+# Query: Buscar reserva por ID
+query GetBookingById($id: UUID!) {
+  bookingsCollection(filter: { id: { eq: $id } }) {
+    edges {
+      node {
+        id
+        startTime
+        endTime
+        status
+        notes
+        checkedIn
+        checkedInAt
+        qrCode
+        createdAt
+        space {
+          id
+          name
+          type
+          capacity
+          description
+          imageUrl
+          floor
+        }
+        user {
+          id
+          fullName
+          role
+          building
+          floor
+          room
+        }
+      }
+    }
+  }
+}
+
+# Query: Verificar conflitos de horário
+query CheckBookingConflicts(
+  $spaceId: UUID!
+  $startTime: Datetime!
+  $endTime: Datetime!
+) {
+  bookingsCollection(
+    filter: {
+      spaceId: { eq: $spaceId }
+      status: { in: ["confirmed", "pending"] }
+      startTime: { lt: $endTime }
+      endTime: { gt: $startTime }
+    }
+  ) {
+    edges {
+      node {
+        id
+        startTime
+        endTime
+        status
+      }
+    }
+  }
+}
+
+# Mutation: Criar reserva
+mutation CreateBooking($input: BookingsInsertInput!) {
+  insertIntoBookingsCollection(objects: [$input]) {
+    records {
+      id
+      spaceId
+      userId
+      startTime
+      endTime
+      status
+      notes
+      createdAt
+    }
+  }
+}
+
+# Mutation: Atualizar reserva
+mutation UpdateBooking($id: UUID!, $set: BookingsUpdateInput!) {
+  updateBookingsCollection(filter: { id: { eq: $id } }, set: $set) {
+    records {
+      id
+      startTime
+      endTime
+      status
+      notes
+      updatedAt
+    }
+  }
+}
+
+# Mutation: Cancelar reserva
+mutation CancelBooking($id: UUID!) {
+  updateBookingsCollection(
+    filter: { id: { eq: $id } }
+    set: { status: "cancelled" }
+  ) {
+    records {
+      id
+      status
+      updatedAt
+    }
+  }
+}
+
+# Mutation: Fazer check-in
+mutation CheckInBooking($id: UUID!, $now: Datetime!) {
+  updateBookingsCollection(
+    filter: { id: { eq: $id } }
+    set: { checkedIn: true, checkedInAt: $now }
+  ) {
+    records {
+      id
+      checkedIn
+      checkedInAt
+      qrCode
+    }
+  }
+}
+
+# Mutation: Gerar QR Code
+mutation GenerateQRCode($id: UUID!, $qrCode: String!) {
+  updateBookingsCollection(
+    filter: { id: { eq: $id } }
+    set: { qrCode: $qrCode }
+  ) {
+    records {
+      id
+      qrCode
+    }
+  }
+}

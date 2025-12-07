@@ -1,0 +1,168 @@
+# Events Queries and Mutations
+# Using Supabase GraphQL Collection pattern
+
+# Query: Listar eventos futuros
+query GetUpcomingEvents($currentTime: Datetime!, $first: Int!) {
+  eventsCollection(
+    first: $first
+    filter: { eventDate: { gte: $currentTime } }
+    orderBy: { eventDate: AscNullsLast }
+  ) {
+    edges {
+      node {
+        id
+        title
+        description
+        eventDate
+        location
+        maxAttendees
+        imageUrl
+        createdAt
+        organizer {
+          id
+          fullName
+          avatarUrl
+        }
+        eventRsvpsCollection {
+          edges {
+            node {
+              id
+              status
+              user {
+                id
+                fullName
+              }
+            }
+          }
+        }
+      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+
+# Query: Buscar evento por ID
+query GetEventById($id: UUID!) {
+  eventsCollection(filter: { id: { eq: $id } }) {
+    edges {
+      node {
+        id
+        title
+        description
+        eventDate
+        location
+        maxAttendees
+        imageUrl
+        createdAt
+        organizer {
+          id
+          fullName
+          avatarUrl
+          role
+        }
+        eventRsvpsCollection {
+          edges {
+            node {
+              id
+              status
+              createdAt
+              user {
+                id
+                fullName
+                avatarUrl
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+# Query: Buscar meus RSVPs
+query GetMyRsvps($userId: UUID!, $first: Int!) {
+  eventRsvpsCollection(
+    first: $first
+    filter: { userId: { eq: $userId } }
+    orderBy: { createdAt: DescNullsLast }
+  ) {
+    edges {
+      node {
+        id
+        status
+        createdAt
+        event {
+          id
+          title
+          description
+          eventDate
+          location
+          imageUrl
+        }
+      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+
+# Mutation: Criar evento
+mutation CreateEvent($input: EventsInsertInput!) {
+  insertIntoEventsCollection(objects: [$input]) {
+    records {
+      id
+      title
+      description
+      eventDate
+      location
+      maxAttendees
+      organizerId
+      createdAt
+    }
+  }
+}
+
+# Mutation: Atualizar evento
+mutation UpdateEvent($id: UUID!, $set: EventsUpdateInput!) {
+  updateEventsCollection(filter: { id: { eq: $id } }, set: $set) {
+    records {
+      id
+      title
+      description
+      eventDate
+      location
+      maxAttendees
+      updatedAt
+    }
+  }
+}
+
+# Mutation: Criar/Atualizar RSVP
+mutation UpsertRsvp($input: EventRsvpsInsertInput!) {
+  insertIntoEventRsvpsCollection(objects: [$input]) {
+    records {
+      id
+      eventId
+      userId
+      status
+      createdAt
+    }
+  }
+}
+
+# Mutation: Cancelar RSVP
+mutation CancelRsvp($id: UUID!) {
+  deleteFromEventRsvpsCollection(filter: { id: { eq: $id } }) {
+    records {
+      id
+    }
+  }
+}
+

@@ -1,0 +1,146 @@
+# Spaces Queries and Mutations
+# Using Supabase GraphQL Collection pattern
+
+# Query: Listar todos os espaços disponíveis com paginação
+query GetSpaces($first: Int!, $after: Cursor) {
+  spacesCollection(
+    first: $first
+    after: $after
+    filter: { available: { eq: true } }
+    orderBy: { name: AscNullsLast }
+  ) {
+    edges {
+      node {
+        id
+        nodeId
+        name
+        type
+        capacity
+        description
+        amenities
+        imageUrl
+        floor
+        available
+        createdAt
+        updatedAt
+      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+  }
+}
+
+# Query: Buscar espaço por ID
+query GetSpaceById($id: UUID!) {
+  spacesCollection(filter: { id: { eq: $id } }) {
+    edges {
+      node {
+        id
+        name
+        type
+        capacity
+        description
+        amenities
+        imageUrl
+        floor
+        available
+        createdAt
+        updatedAt
+      }
+    }
+  }
+}
+
+# Query: Buscar espaços por tipo
+query GetSpacesByType($type: String!, $first: Int!) {
+  spacesCollection(
+    first: $first
+    filter: { type: { eq: $type }, available: { eq: true } }
+    orderBy: { capacity: DescNullsLast }
+  ) {
+    edges {
+      node {
+        id
+        name
+        type
+        capacity
+        description
+        imageUrl
+        floor
+        available
+      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+
+# Query: Buscar espaço com suas reservas
+query GetSpaceWithBookings($spaceId: UUID!, $startDate: Datetime!) {
+  spacesCollection(filter: { id: { eq: $spaceId } }) {
+    edges {
+      node {
+        id
+        name
+        type
+        capacity
+        description
+        imageUrl
+        floor
+        available
+        bookingsCollection(
+          filter: {
+            startTime: { gte: $startDate }
+            status: { in: ["confirmed", "pending"] }
+          }
+          orderBy: { startTime: AscNullsLast }
+        ) {
+          edges {
+            node {
+              id
+              startTime
+              endTime
+              status
+              user {
+                fullName
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+# Query: Buscar espaços disponíveis em um horário específico
+query GetAvailableSpaces(
+  $startTime: Datetime!
+  $endTime: Datetime!
+  $first: Int!
+) {
+  spacesCollection(
+    first: $first
+    filter: { available: { eq: true } }
+    orderBy: { name: AscNullsLast }
+  ) {
+    edges {
+      node {
+        id
+        name
+        type
+        capacity
+        description
+        imageUrl
+        floor
+      }
+    }
+  }
+}

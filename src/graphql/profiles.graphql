@@ -1,0 +1,96 @@
+# User Profiles Queries and Mutations
+# Using Supabase GraphQL Collection pattern
+
+# Query: Buscar perfil do usuário
+query GetMyProfile($userId: UUID!) {
+  profilesCollection(filter: { id: { eq: $userId } }) {
+    edges {
+      node {
+        id
+        fullName
+        avatarUrl
+        role
+        building
+        floor
+        room
+        phone
+        createdAt
+        updatedAt
+      }
+    }
+  }
+}
+
+# Query: Listar residentes (para diretório)
+query GetResidents($first: Int!, $after: Cursor) {
+  profilesCollection(
+    first: $first
+    after: $after
+    filter: { role: { eq: "resident" } }
+    orderBy: { fullName: AscNullsLast }
+  ) {
+    edges {
+      node {
+        id
+        fullName
+        avatarUrl
+        building
+        floor
+        room
+      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+
+# Query: Buscar perfil por ID
+query GetProfileById($id: UUID!) {
+  profilesCollection(filter: { id: { eq: $id } }) {
+    edges {
+      node {
+        id
+        fullName
+        avatarUrl
+        role
+        building
+        floor
+        room
+        phone
+        createdAt
+      }
+    }
+  }
+}
+
+# Mutation: Atualizar perfil
+mutation UpdateProfile($id: UUID!, $set: ProfilesUpdateInput!) {
+  updateProfilesCollection(filter: { id: { eq: $id } }, set: $set) {
+    records {
+      id
+      fullName
+      avatarUrl
+      building
+      floor
+      room
+      phone
+      updatedAt
+    }
+  }
+}
+
+# Mutation: Criar perfil (após signup)
+mutation CreateProfile($input: ProfilesInsertInput!) {
+  insertIntoProfilesCollection(objects: [$input]) {
+    records {
+      id
+      fullName
+      role
+      createdAt
+    }
+  }
+}
+

@@ -1,0 +1,142 @@
+# Maintenance Requests Queries and Mutations
+# Using Supabase GraphQL Collection pattern
+
+# Query: Buscar minhas solicitações de manutenção
+query GetMyMaintenanceRequests($userId: UUID!, $first: Int!, $after: Cursor) {
+  maintenanceRequestsCollection(
+    first: $first
+    after: $after
+    filter: { userId: { eq: $userId } }
+    orderBy: { createdAt: DescNullsLast }
+  ) {
+    edges {
+      node {
+        id
+        title
+        description
+        category
+        priority
+        status
+        location
+        imageUrls
+        createdAt
+        updatedAt
+        resolvedAt
+        assignedTo
+      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+
+# Query: Buscar solicitação por ID
+query GetMaintenanceRequestById($id: UUID!) {
+  maintenanceRequestsCollection(filter: { id: { eq: $id } }) {
+    edges {
+      node {
+        id
+        title
+        description
+        category
+        priority
+        status
+        location
+        imageUrls
+        createdAt
+        updatedAt
+        resolvedAt
+        user {
+          id
+          fullName
+          building
+          floor
+          room
+          phone
+        }
+        assignedTo
+      }
+    }
+  }
+}
+
+# Query: Listar solicitações por status
+query GetMaintenanceByStatus($status: String!, $first: Int!) {
+  maintenanceRequestsCollection(
+    first: $first
+    filter: { status: { eq: $status } }
+    orderBy: { createdAt: DescNullsLast }
+  ) {
+    edges {
+      node {
+        id
+        title
+        category
+        priority
+        status
+        location
+        createdAt
+        user {
+          fullName
+          building
+          floor
+          room
+        }
+      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+
+# Mutation: Criar solicitação de manutenção
+mutation CreateMaintenanceRequest($input: MaintenanceRequestsInsertInput!) {
+  insertIntoMaintenanceRequestsCollection(objects: [$input]) {
+    records {
+      id
+      userId
+      title
+      description
+      category
+      priority
+      status
+      location
+      imageUrls
+      createdAt
+    }
+  }
+}
+
+# Mutation: Atualizar solicitação
+mutation UpdateMaintenanceRequest($id: UUID!, $set: MaintenanceRequestsUpdateInput!) {
+  updateMaintenanceRequestsCollection(filter: { id: { eq: $id } }, set: $set) {
+    records {
+      id
+      status
+      assignedTo
+      resolvedAt
+      updatedAt
+    }
+  }
+}
+
+# Mutation: Resolver solicitação
+mutation ResolveMaintenanceRequest($id: UUID!, $resolvedAt: Datetime!) {
+  updateMaintenanceRequestsCollection(
+    filter: { id: { eq: $id } }
+    set: { status: "resolved", resolvedAt: $resolvedAt }
+  ) {
+    records {
+      id
+      status
+      resolvedAt
+    }
+  }
+}
+
