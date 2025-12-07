@@ -1,9 +1,10 @@
-node_modules
-.expo
-.expo-shared
-dist
-build
-coverage
-*.log
-.DS_Store
+# Generated files
+src/generated/graphql.ts
 
+# Dependencies
+node_modules/
+
+# Build outputs
+.expo/
+dist/
+build/
