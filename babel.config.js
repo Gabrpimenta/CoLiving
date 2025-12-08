@@ -23,7 +23,6 @@ module.exports = function (api) {
             '@constants': './src/constants',
           },
         },
-        'react-native-worklets/plugin',
       ],
     ],
   };

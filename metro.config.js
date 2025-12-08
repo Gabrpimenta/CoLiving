@@ -3,5 +3,10 @@ const { withNativeWind } = require('nativewind/metro');
 
 const config = getDefaultConfig(__dirname);
 
+config.resolver.extraNodeModules = {
+  ...config.resolver.extraNodeModules,
+  'react-dom': require.resolve('react-dom'),
+};
+
 module.exports = withNativeWind(config, { input: './global.css' });
 

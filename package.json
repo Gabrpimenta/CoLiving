@@ -30,6 +30,7 @@
     "graphql": "^16.12.0",
     "nativewind": "^4.2.1",
     "react": "18.2.0",
+    "react-dom": "18.2.0",
     "react-native": "0.74.5",
     "react-native-mmkv": "^2.12.2",
     "react-native-reanimated": "~3.10.1",
@@ -65,6 +66,9 @@
     "prettier-plugin-tailwindcss": "^0.5.11",
     "tailwindcss": "^3.4.17",
     "typescript": "~5.3.3"
+  },
+  "resolutions": {
+    "react-native-css-interop": "0.1.22"
   },
   "private": true
 }
