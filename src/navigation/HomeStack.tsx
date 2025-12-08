@@ -14,7 +14,7 @@ const PlaceholderScreen = ({ route }: any) => (
 
 export const HomeStack = () => {
   return (
-    <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: true }}>
+    <Stack.Navigator initialRouteName="SpaceList" screenOptions={{ headerShown: true }}>
       <Stack.Screen name="Home" component={PlaceholderScreen} options={{ title: 'Home' }} />
       <Stack.Screen name="SpaceList" component={SpaceListScreen} options={{ title: 'Spaces' }} />
       <Stack.Screen
