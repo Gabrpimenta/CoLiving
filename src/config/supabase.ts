@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import 'react-native-url-polyfill/auto';
-import { mmkvStorage } from '@/utils/storage';
+import { mmkvStorage } from '@/lib/storage';
 
 const getEnvVar = (key: string, defaultValue: string): string => {
   if (typeof process !== 'undefined' && process.env && process.env[key]) {
