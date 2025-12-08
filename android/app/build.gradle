@@ -109,9 +109,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.colivepro.app'
+    namespace 'com.coliving.app'
     defaultConfig {
-        applicationId 'com.colivepro.app'
+        applicationId 'com.coliving.app'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

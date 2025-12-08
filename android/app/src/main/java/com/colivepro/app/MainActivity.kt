@@ -1,4 +1,4 @@
-package com.colivepro.app
+package com.coliving.app
 
 import android.os.Build
 import android.os.Bundle

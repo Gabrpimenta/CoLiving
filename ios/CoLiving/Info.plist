@@ -27,7 +27,7 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>com.colivepro.app</string>
+          <string>com.coliving.app</string>
         </array>
       </dict>
     </array>
