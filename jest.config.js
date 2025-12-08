@@ -1,8 +1,8 @@
 module.exports = {
   preset: 'react-native',
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  setupFilesAfterEnv: [ '<rootDir>/jest.setup.js' ],
   transformIgnorePatterns: [
-    'node_modules/(?!(jest-)?@?react-native|@react-native-community|@react-navigation|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)',
+    'node_modules/(?!(jest-)?@?react-native|@react-native-community|@react-navigation|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg|immer|zustand|@gluestack-ui)',
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
@@ -14,6 +14,13 @@ module.exports = {
     '^@types/(.*)$': '<rootDir>/src/types/$1',
     '^@config/(.*)$': '<rootDir>/src/config/$1',
     '^@constants/(.*)$': '<rootDir>/src/constants/$1',
+    '^@gluestack-ui/utils/nativewind-utils$': '<rootDir>/src/__mocks__/@gluestack-ui/utils.ts',
+    '^@gluestack-ui/core/button/creator$': '<rootDir>/src/__mocks__/@gluestack-ui/core.ts',
+    '^@gluestack-ui/core/icon/creator$': '<rootDir>/src/__mocks__/@gluestack-ui/core.ts',
+    '^@gluestack-ui/core/pressable/creator$': '<rootDir>/src/__mocks__/@gluestack-ui/core.ts',
+    '^@/components/ui/vstack$': '<rootDir>/src/components/ui/vstack/__mocks__/index.tsx',
+    '^@/components/ui/button$': '<rootDir>/src/components/ui/button/__mocks__/index.tsx',
+    '^@/components/ui/(hstack|text|input|card|badge|spinner|pressable)$': '<rootDir>/src/components/ui/__mocks__/index.ts',
   },
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',
@@ -21,13 +28,17 @@ module.exports = {
     '!src/**/*.stories.{ts,tsx}',
     '!src/**/__tests__/**',
     '!src/**/__mocks__/**',
+    '!src/**/index.ts',
+    '!src/**/index.tsx',
+    '!src/generated/**',
+    '!src/components/ui/gluestack-ui-provider/**',
   ],
   coverageThreshold: {
     global: {
-      branches: 85,
-      functions: 85,
-      lines: 85,
-      statements: 85,
+      branches: 90,
+      functions: 90,
+      lines: 90,
+      statements: 90,
     },
   },
 };

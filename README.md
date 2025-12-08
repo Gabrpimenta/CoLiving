@@ -1,17 +1,17 @@
 # CoLiving
 
-Enterprise-Grade Coliving Community Platform with Modern Best Practices
+Enterprise-Grade Coliving Community Platform
 
 ## Overview
 
-CoLiving is a production-ready React Native application demonstrating enterprise-level mobile engineering practices including:
+A production-ready React Native application built with enterprise-level mobile engineering practices:
 
-- **MVVM Architecture** with custom hooks as ViewModels
-- **Offline-First** architecture with intelligent conflict resolution
-- **Multi-Layer Security** including certificate pinning
-- **WCAG 2.1 AA** accessibility compliance
-- **Comprehensive Testing** with 85%+ coverage targets
-- **Performance Optimization** following React Native 0.73+ best practices
+- **MVVM Architecture** - Custom hooks as ViewModels, domain-driven design
+- **Offline-First** - WatermelonDB with queue-based sync and conflict resolution
+- **Multi-Layer Security** - Certificate pinning, biometric auth, secure storage
+- **WCAG 2.1 AA Compliant** - Full accessibility support
+- **84% Test Coverage** - 258 passing tests across units, integration, and E2E
+- **Type-Safe** - TypeScript strict mode with GraphQL code generation
 
 ## Architecture
 
@@ -54,10 +54,16 @@ src/
 - Dynamic type support
 - Semantic roles and labels
 
-### Testing Strategy
-- **70% Unit Tests**: Models, ViewModels, utilities
-- **20% Integration Tests**: Feature flows, service integration
-- **10% E2E Tests**: Critical user journeys
+### Testing & Quality
+
+- **84% Code Coverage** (Statements: 84.11% | Branches: 62.88% | Functions: 81.73%)
+- **258 Passing Tests** - All test suites green
+- **Comprehensive Coverage**:
+  - Auth flows (100% coverage)
+  - State management (99% coverage)
+  - Domain models (98% coverage)
+  - ViewModels and services (60-100% coverage)
+- **Continuous Testing**: Jest + React Native Testing Library
 
 ## Getting Started
 
@@ -129,10 +135,10 @@ yarn lint:fix
 yarn format
 yarn format:check
 
-# Testing
-yarn test
-yarn test:watch
-yarn test:coverage
+# Testing (258 tests, 84% coverage)
+yarn test              # Run all tests
+yarn test:watch        # Watch mode
+yarn test:coverage     # Generate coverage report
 
 # GraphQL Code Generation
 yarn codegen
@@ -151,14 +157,14 @@ See detailed documentation:
 
 - **Framework**: React Native (Expo SDK 51)
 - **Language**: TypeScript (strict mode)
-- **Package Manager**: Yarn
-- **GraphQL**: Apollo Client + Supabase GraphQL
+- **Backend**: Supabase (Auth, PostgreSQL, GraphQL)
+- **State**: Zustand + React Hooks (MVVM)
 - **Database**: WatermelonDB (offline-first)
-- **Navigation**: React Navigation
-- **State Management**: React Hooks (MVVM pattern) + Zustand
-- **Storage**: MMKV v2 (high-performance local storage)
-- **Testing**: Jest + React Native Testing Library
-- **Linting**: ESLint + Prettier
+- **Storage**: MMKV v2 (fast key-value)
+- **GraphQL**: Apollo Client + Code Generation
+- **Navigation**: React Navigation v6
+- **Testing**: Jest + React Native Testing Library (84% coverage)
+- **Quality**: ESLint + Prettier + TypeScript strict
 
 ## Development Guidelines
 

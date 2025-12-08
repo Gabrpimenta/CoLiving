@@ -42,6 +42,7 @@ export const useAuthStore = create<AuthStore>()(
             state.refreshToken = null;
             state.isAuthenticated = false;
             state.error = null;
+            state.isLoading = false;
           });
         },
 
@@ -76,15 +77,37 @@ export const useAuthStore = create<AuthStore>()(
             if (error) throw error;
 
             if (data.session) {
-              const { access_token, refresh_token } = data.session;
+              const { access_token, refresh_token, user } = data.session;
 
               set((draft) => {
                 draft.accessToken = access_token;
                 draft.refreshToken = refresh_token || state.refreshToken;
                 draft.isLoading = false;
+
+                if (user) {
+                  draft.user = {
+                    id: user.id,
+                    email: user.email || '',
+                    fullName: user.user_metadata?.full_name || null,
+                    role: (user.user_metadata?.role as 'resident' | 'admin' | 'staff') || 'resident',
+                    profileId: user.user_metadata?.profile_id || null,
+                    avatarUrl: user.user_metadata?.avatar_url || null,
+                    createdAt: user.created_at,
+                    updatedAt: user.updated_at || user.created_at,
+                  };
+                  draft.isAuthenticated = true;
+                }
               });
 
               await supabase.auth.setSession(data.session);
+            } else {
+              set((draft) => {
+                draft.user = null;
+                draft.accessToken = null;
+                draft.refreshToken = null;
+                draft.isAuthenticated = false;
+                draft.isLoading = false;
+              });
             }
           } catch (error: any) {
             set((draft) => {

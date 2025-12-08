@@ -52,8 +52,10 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    "nativewind-env.d.ts"
+    "nativewind-env.d.ts",
+    "**/__tests__/**/*"
   ],
+  "types": ["jest", "@testing-library/jest-native"],
   "exclude": [
     "node_modules",
     "src/generated/**/*"
